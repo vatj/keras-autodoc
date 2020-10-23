@@ -1,5 +1,5 @@
 import inspect
-from inspect import isclass, isfunction, isroutine
+from inspect import isclass, isfunction, isroutine, isdatadescriptor
 from typing import List
 from .utils import import_object
 
@@ -85,6 +85,22 @@ def get_methods(cls, exclude=None, return_strings=True):
             methods.append(method)
     return methods
 
+def get_properties(cls, exclude=None, return_strings=True):
+    if isinstance(cls, str):
+        cls_str = cls
+        cls = import_object(cls)
+    else:
+        cls_str = f'{cls.__module__}.{cls.__name__}'
+    exclude = exclude or []
+    properties = []
+    for name, property in inspect.getmembers(cls, predicate=isdatadescriptor):
+        if name[0] == "_" or name in exclude:
+            continue
+        if return_strings:
+            properties.append(f'{cls_str}.{name}')
+        else:
+            properties.append(property)
+    return properties
 
 def _get_all_module_element(module, exclude, return_strings, class_):
     if isinstance(module, str):
