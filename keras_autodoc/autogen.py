@@ -135,8 +135,11 @@ class DocumentationGenerator:
 
     def _render_from_object(self, object_, signature_override: str):
         subblocks = []
-        if self.project_url is not None and not isinstance(object_, property):
-            subblocks.append(utils.make_source_link(object_, self.project_url))
+        if self.project_url is not None:
+            if isinstance(object_, property):
+                subblocks.append(utils.make_source_link(object_.fget, self.project_url))
+            else:
+                subblocks.append(utils.make_source_link(object_, self.project_url))
         signature = get_signature(
             object_, signature_override, self.max_signature_line_length
         )
