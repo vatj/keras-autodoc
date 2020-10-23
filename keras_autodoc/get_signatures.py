@@ -46,9 +46,17 @@ def get_class_signature(cls, override=None, max_line_length: int = 110):
     return format_signature(signature_start, signature_end, max_line_length)
 
 
+def get_property_signature(property, override=None, max_line_length: int = 110):
+    fget_sig = get_function_signature(property.fget)
+    if fget_sig[-2:] == "()":
+        return fget_sig[:-2]
+
+
 def get_signature(object_, override=None, max_line_length: int = 110):
     if inspect.isclass(object_):
         return get_class_signature(object_, override, max_line_length)
+    elif isinstance(object_, property):
+        return get_property_signature(object_, override, max_line_length)
     else:
         return get_function_signature(object_, override, max_line_length)
 

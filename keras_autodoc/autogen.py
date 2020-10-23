@@ -116,7 +116,7 @@ class DocumentationGenerator:
     def _render(self, element):
         if isinstance(element, str):
             object_ = utils.import_object(element)
-            if utils.ismethod(object_):
+            if utils.ismethod(object_) or isinstance(object_, property):
                 # we remove the modules when displaying the methods
                 signature_override = '.'.join(element.split('.')[-2:])
             else:
@@ -135,14 +135,19 @@ class DocumentationGenerator:
 
     def _render_from_object(self, object_, signature_override: str):
         subblocks = []
-        if self.project_url is not None:
+        if self.project_url is not None and not isinstance(object_, property):
             subblocks.append(utils.make_source_link(object_, self.project_url))
         signature = get_signature(
             object_, signature_override, self.max_signature_line_length
         )
         signature = self.process_signature(signature)
-        subblocks.append(f"{self.titles_size} {object_.__name__}\n")
-        subblocks.append(utils.code_snippet(signature))
+
+        if not isinstance(object_, property):
+            subblocks.append(f"{self.titles_size} {object_.__name__}\n")
+            subblocks.append(utils.code_snippet(signature))
+        else:
+            object_ = object_.fget
+            subblocks.append(f"{self.titles_size} {object_.__name__}\n")
 
         docstring = getdoc(object_)
         if docstring:
