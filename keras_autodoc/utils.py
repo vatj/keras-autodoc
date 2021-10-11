@@ -102,6 +102,8 @@ def import_object(string: str):
         try:
             last_object_got = importlib.import_module('.'.join(seen_names))
         except ModuleNotFoundError:
+            if isinstance(last_object_got, property):
+                last_object_got = last_object_got.__get__(last_object_got)
             last_object_got = getattr(last_object_got, name)
     return last_object_got
 
