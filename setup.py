@@ -8,9 +8,9 @@ readme = this_file.parent / 'README.md'
 
 setup(
     name='keras-autodoc',
-    version='0.7.0',
+    version='0.8.0',
     packages=find_packages(),
-    install_requires=['markdown', 'sphinx', 'black==20.8b1'],
+    install_requires=['markdown', 'sphinx', 'black'],
     package_data={'': ['README.md']},
     author='The Keras team',
     author_email='gabrieldemarmiesse@gmail.com',
@@ -19,13 +19,15 @@ setup(
     long_description_content_type='text/markdown',
     url='https://github.com/keras-team/keras-autodoc',
     license='Apache License 2.0',
-    extras_require={'tests': ['pytest', 'pytest-pep8']},
+    extras_require={'tests': ['pytest', 'pytest-pep8', 'keras-tuner', 'tensorflow>=2.9.1']},
     classifiers=[
         'Natural Language :: English',
         'Operating System :: OS Independent',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
+        'Programming Language :: Python :: 3.10',
         'Topic :: Utilities',
         'Topic :: Documentation',
         'Topic :: Software Development :: Libraries :: Python Modules',
