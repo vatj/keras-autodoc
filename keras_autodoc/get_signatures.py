@@ -2,7 +2,8 @@ import warnings
 from . import utils
 import black
 import inspect
-from sphinx.util.inspect import Signature
+from sphinx.util.inspect import signature
+from sphinx.util.inspect import stringify_signature
 
 
 def get_signature_start(function):
@@ -21,7 +22,8 @@ def get_signature_start(function):
 
 
 def get_signature_end(function):
-    signature_end = Signature(function).format_args(show_annotation=False)
+    sig = signature(function)
+    signature_end = stringify_signature(sig, show_annotation=False)
     if utils.ismethod(function):
         signature_end = signature_end.replace('(self, ', '(')
         signature_end = signature_end.replace('(self)', '()')
