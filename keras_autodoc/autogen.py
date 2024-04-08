@@ -1,6 +1,6 @@
 import shutil
 import pathlib
-from inspect import getdoc, isclass, getfullargspec
+from inspect import getdoc, isclass
 from typing import Dict, Union, List, get_type_hints
 
 from .docstring import process_docstring
