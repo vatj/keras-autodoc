@@ -2,7 +2,8 @@ import warnings
 from . import utils
 import black
 import inspect
-from sphinx.util.inspect import Signature
+from sphinx.util.inspect import signature
+from sphinx.util.inspect import stringify_signature
 
 
 def get_signature_start(function):
@@ -21,7 +22,8 @@ def get_signature_start(function):
 
 
 def get_signature_end(function):
-    signature_end = Signature(function).format_args(show_annotation=False)
+    sig = signature(function)
+    signature_end = stringify_signature(sig, show_annotation=False)
     if utils.ismethod(function):
         signature_end = signature_end.replace('(self, ', '(')
         signature_end = signature_end.replace('(self)', '()')
@@ -46,9 +48,17 @@ def get_class_signature(cls, override=None, max_line_length: int = 110):
     return format_signature(signature_start, signature_end, max_line_length)
 
 
+def get_property_signature(property, override=None, max_line_length: int = 110):
+    fget_sig = get_function_signature(property.fget)
+    if fget_sig[-2:] == "()":
+        return fget_sig[:-2]
+
+
 def get_signature(object_, override=None, max_line_length: int = 110):
     if inspect.isclass(object_):
         return get_class_signature(object_, override, max_line_length)
+    elif isinstance(object_, property):
+        return get_property_signature(object_, override, max_line_length)
     else:
         return get_function_signature(object_, override, max_line_length)
 
